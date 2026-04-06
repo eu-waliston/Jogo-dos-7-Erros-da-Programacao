@@ -2,7 +2,7 @@
 (function () {
     // ========== DEFINIÇÃO DOS NÍVEIS ==========
     const levels = [
-        { // Nível 0 - Iniciante
+        {
             name: "INICIANTE",
             correctCode: `def saudacao(nome):
     print("Olá, " + nome + "!")
@@ -20,7 +20,7 @@
                 { line: 2, charPos: 11, explanation: "⚙️ 'True' está correto, mas o return está fora do lugar" }
             ]
         },
-        { // Nível Intermediário
+        {
             name: "INTERMEDIÁRIO",
             correctCode: `idade = 18
 if idade >= 18:
@@ -42,7 +42,7 @@ else
                 { line: 1, charPos: 15, explanation: "🔁 Condição if com problema lógico" }
             ]
         },
-        { // Nível Avançado
+        {
             name: "AVANÇADO",
             correctCode: `for i in range(3):
     print(f"Valor: {i}")
@@ -93,13 +93,17 @@ else
     const congratsNextBtn = document.getElementById('congratsNextBtn');
     const congratsResetBtn = document.getElementById('congratsResetBtn');
 
-    // Função para mostrar tela de parabéns
+    // Função para animar os números das estatísticas
+    function animateStat(element) {
+        element.classList.add('animate');
+        setTimeout(() => element.classList.remove('animate'), 300);
+    }
+
     function showCongrats() {
         const level = levels[currentLevel];
         congratsLevelName.innerText = level.name;
         congratsAttempts.innerText = attempts;
 
-        // Preencher lista de erros
         errorsListContainer.innerHTML = '';
         currentErrors.forEach((err, index) => {
             const errorDiv = document.createElement('div');
@@ -115,36 +119,26 @@ else
         congratsOverlay.classList.remove('hidden');
     }
 
-    // Função para esconder tela de parabéns
     function hideCongrats() {
         congratsOverlay.classList.add('hidden');
     }
 
-    // Função para avançar nível pela tela de parabéns
     function nextLevelFromCongrats() {
         hideCongrats();
         if (currentLevel + 1 < levels.length) {
             loadLevel(currentLevel + 1);
         } else {
-            // Jogo completo!
             feedbackDiv.innerHTML = `<span class="message success">✨ PARABÉNS! VOCÊ COMPLETOU TODOS OS NÍVEIS! ✨</span>`;
             nextLevelBtn.disabled = true;
             levelCompleted = true;
         }
     }
 
-    // Função para resetar pela tela de parabéns
     function resetFromCongrats() {
         hideCongrats();
         loadLevel(0);
     }
 
-    // Função para medir largura do texto
-    function getTextWidth(text, ctx) {
-        return ctx.measureText(text).width;
-    }
-
-    // Desenha código e retorna as posições de cada linha
     function drawCodeAndGetPositions(ctx, codeText) {
         const w = canvasCorrect.width, h = canvasCorrect.height;
         ctx.clearRect(0, 0, w, h);
@@ -180,7 +174,6 @@ else
         return linePositions;
     }
 
-    // Atualizar posições dos erros baseado nas linhas atuais
     function updateErrorPositions(linePositions) {
         for (let i = 0; i < currentErrors.length; i++) {
             const err = currentErrors[i];
@@ -194,61 +187,72 @@ else
 
                 err.cx = lineInfo.x + widthBefore;
                 err.cy = lineInfo.y + 15;
-                err.radius = 20;
+                err.radius = 14; // TAMANHO REDUZIDO
             } else {
                 err.cx = 100 + (i * 50);
                 err.cy = 100 + (i * 40);
-                err.radius = 20;
+                err.radius = 14;
             }
         }
     }
 
-    // Desenhar círculos de erro
     function drawErrorCircles(ctx) {
         for (let i = 0; i < currentErrors.length; i++) {
             const err = currentErrors[i];
 
             if (err.found) {
+                // Círculo verde de concluído - COM ALTA TRANSPARÊNCIA
                 ctx.beginPath();
-                ctx.arc(err.cx, err.cy, err.radius + 3, 0, 2 * Math.PI);
-                ctx.fillStyle = "#22c55ecc";
+                ctx.arc(err.cx, err.cy, err.radius + 2, 0, 2 * Math.PI);
+                ctx.fillStyle = "#22c55e66"; // 40% opacidade
                 ctx.fill();
                 ctx.beginPath();
-                ctx.arc(err.cx, err.cy, err.radius, 0, 2 * Math.PI);
-                ctx.fillStyle = "#166534";
+                ctx.arc(err.cx, err.cy, err.radius - 1, 0, 2 * Math.PI);
+                ctx.fillStyle = "#16653499"; // 60% opacidade
                 ctx.fill();
-                ctx.font = "bold 20px monospace";
+                ctx.font = "bold 14px monospace";
                 ctx.fillStyle = "white";
-                ctx.fillText("✓", err.cx - 7, err.cy + 8);
+                ctx.fillText("✓", err.cx - 4, err.cy + 5);
             }
             else if (showCircles) {
-                ctx.shadowBlur = 8;
-                ctx.shadowColor = "rgba(255,0,0,0.5)";
+                ctx.shadowBlur = 4;
+                ctx.shadowColor = "rgba(255,0,0,0.2)";
 
+                // Círculo externo - ALTA TRANSPARÊNCIA (bem suave)
                 ctx.beginPath();
-                ctx.arc(err.cx, err.cy, err.radius + 5, 0, 2 * Math.PI);
-                ctx.fillStyle = "#ef4444cc";
+                ctx.arc(err.cx, err.cy, err.radius + 3, 0, 2 * Math.PI);
+                ctx.fillStyle = "#ef444433"; // 20% opacidade (bem transparente)
                 ctx.fill();
+
+                // Círculo médio
                 ctx.beginPath();
                 ctx.arc(err.cx, err.cy, err.radius + 1, 0, 2 * Math.PI);
-                ctx.fillStyle = "#dc2626";
+                ctx.fillStyle = "#dc262655"; // 33% opacidade
                 ctx.fill();
+
+                // Círculo interno
                 ctx.beginPath();
-                ctx.arc(err.cx, err.cy, err.radius + 1, 0, 2 * Math.PI);
-                ctx.strokeStyle = "white";
-                ctx.lineWidth = 3;
+                ctx.arc(err.cx, err.cy, err.radius - 2, 0, 2 * Math.PI);
+                ctx.fillStyle = "#ef444488"; // 53% opacidade
+                ctx.fill();
+
+                // Borda suave
+                ctx.beginPath();
+                ctx.arc(err.cx, err.cy, err.radius, 0, 2 * Math.PI);
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.5)";
+                ctx.lineWidth = 1.5;
                 ctx.stroke();
 
                 ctx.shadowBlur = 0;
 
-                ctx.font = "bold 20px monospace";
-                ctx.fillStyle = "white";
-                ctx.fillText((i + 1).toString(), err.cx - 8, err.cy + 9);
+                // Número pequeno
+                ctx.font = "bold 12px monospace";
+                ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+                ctx.fillText((i + 1).toString(), err.cx - 4, err.cy + 5);
             }
         }
     }
 
-    // Renderização completa
     function renderLevel() {
         const level = levels[currentLevel];
 
@@ -268,12 +272,10 @@ else
         if (remainingCount === 0 && !levelCompleted) {
             levelCompleted = true;
             canClick = false;
-            // Mostrar tela de parabéns em vez de mensagem simples
             showCongrats();
         }
     }
 
-    // Verificar clique no canvas
     function handleCanvasClick(e) {
         if (levelCompleted || !canClick) return;
 
@@ -311,12 +313,15 @@ else
         }
 
         attempts++;
+        animateStat(attemptCounterSpan);
 
         if (hitIndex !== -1) {
             currentErrors[hitIndex].found = true;
             const remainingCount = currentErrors.filter(e => !e.found).length;
 
             feedbackDiv.innerHTML = `<span class="message success">✅ ACERTOU! ${currentErrors[hitIndex].explanation}</span>`;
+            animateStat(errorsFoundSpan);
+            animateStat(errorsRemainingSpan);
 
             if (remainingCount === 0) {
                 levelCompleted = true;
@@ -327,7 +332,7 @@ else
             renderLevel();
         } else {
             if (showCircles) {
-                feedbackDiv.innerHTML = `<span class="message error">❌ Clique exatamente nos CÍRCULOS VERMELHOS em cima dos erros!</span>`;
+                feedbackDiv.innerHTML = `<span class="message error">❌ Clique exatamente nos CÍRCULOS SUAVES em cima dos erros!</span>`;
             } else {
                 feedbackDiv.innerHTML = `<span class="message error">❌ Nenhum erro aqui! Ative os círculos para ver onde estão.</span>`;
             }
@@ -346,7 +351,7 @@ else
         showCircles = !showCircles;
         renderLevel();
         feedbackDiv.innerHTML = showCircles ?
-            `<span class="message warning">🔴 CÍRCULOS VISÍVEIS! Clique nos círculos vermelhos!</span>` :
+            `<span class="message warning">🔴 CÍRCULOS VISÍVEIS! Clique nos círculos suaves!</span>` :
             `<span class="message">⚪ Círculos ocultos. Tente achar os erros sozinho!</span>`;
     }
 
@@ -360,7 +365,7 @@ else
             found: false,
             cx: 0,
             cy: 0,
-            radius: 20
+            radius: 14
         }));
 
         attempts = 0;
@@ -370,7 +375,7 @@ else
         currentLevel = levelIndex;
         renderLevel();
         nextLevelBtn.disabled = true;
-        feedbackDiv.innerHTML = `<span class="message">🔴 Nível ${levelData.name}: CLIQUE NOS CÍRCULOS VERMELHOS em cima dos erros! Encontre os 7 erros.</span>`;
+        feedbackDiv.innerHTML = `<span class="message">🔴 Nível ${levelData.name}: CLIQUE NOS CÍRCULOS SUAVES em cima dos erros! Encontre os 7 erros.</span>`;
     }
 
     function nextLevel() {
@@ -384,7 +389,7 @@ else
                 levelCompleted = true;
             }
         } else {
-            feedbackDiv.innerHTML = `<span class="message error">⚠️ Ainda faltam ${remainingCount} erros! Encontre todos os círculos vermelhos.</span>`;
+            feedbackDiv.innerHTML = `<span class="message error">⚠️ Ainda faltam ${remainingCount} erros! Encontre todos os círculos.</span>`;
         }
     }
 
