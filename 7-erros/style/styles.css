@@ -220,7 +220,19 @@
         .food { background: #FFAB19; }     /* Laranja */
         .hygiene { background: #4CBF93; }  /* Verde */
         .items { background: #FF6680; }    /* Rosa */
+        .calendar { background: #2563EB; }  /* Azul */
         .start, .end { background: #FFBF00; color: #000; cursor: default; }
+
+        .s-block:not(.start):not(.end):not(.success):hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
 
         /* Zona de Erro (Onde solta) */
         .dropzone.error {

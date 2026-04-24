@@ -98,7 +98,6 @@
     let currentProfile = profiles.detetive;
 
     // ========== DEFINIÇÃO DOS CÓDIGOS E ERROS ==========
-    // O código permanece o mesmo, mas a interface vai usar os textos do perfil
     const levels = [
         {
             language: "🐍 Python",
@@ -545,9 +544,15 @@ else
             if (pieceType === expectedType) {
                 var nodeCopy = document.getElementById(dataId).cloneNode(true);
                 nodeCopy.removeAttribute("draggable");
+                nodeCopy.removeAttribute("ondragstart");
+                nodeCopy.style.cursor = "default";
                 
-                ev.target.innerHTML = nodeCopy.innerHTML;
+                ev.target.innerHTML = "";
+                ev.target.appendChild(nodeCopy);
                 ev.target.className = "s-block success"; // Transforma em bloco de sucesso
+                ev.target.removeAttribute("ondrop");
+                ev.target.removeAttribute("ondragover");
+                ev.target.removeAttribute("data-expected");
                 
                 // Marca erro como encontrado no array (para Scratch)
                 const errorIndex = currentErrors.findIndex(e => e.blockId === expectedType);
@@ -567,7 +572,8 @@ else
                 feedbackDiv.innerHTML = `<span class="message success">✨ Correto! ${scratchBlocksData[expectedType]}</span>`;
                 
                 // Esconde a peça original do inventário
-                document.getElementById(dataId).style.visibility = "hidden";
+                document.getElementById(dataId).style.opacity = "0.3";
+                document.getElementById(dataId).style.pointerEvents = "none";
                 
                 // Verifica vitória
                 if (remainingCount === 0 && !levelCompleted) {
@@ -576,7 +582,7 @@ else
                     setTimeout(() => showCongrats(), 500);
                 }
             } else {
-                // Se errar, dá uma tremidinha
+                // Se errar, conta tentativa errada e dá feedback
                 wrongAttempts++;
                 animateStat(errorCountSpan);
                 ev.target.style.animation = "errorShake 0.5s ease";
@@ -666,26 +672,38 @@ else
     }
 
     function loadScratchBlocks() {
-        // Reseta visibilidade dos blocos para o novo nível
+        // Reseta visibilidade e estado dos blocos para o novo nível
         const blockIds = ['correto1', 'correto2', 'correto3', 'correto4', 'correto5', 'correto6', 'correto7'];
         blockIds.forEach(id => {
             const block = document.getElementById(id);
             if (block) {
+                block.style.opacity = '1';
+                block.style.pointerEvents = 'auto';
                 block.style.visibility = 'visible';
+                block.draggable = true;
+                block.ondragstart = function(e) { drag(e); };
             }
         });
         
-        // Limpa as dropzones
+        // Limpa as dropzones completamente
         const dropzones = document.querySelectorAll('.dropzone.error');
+        const dropzoneMap = {
+            'olhos': 'Dormir mais 😴',
+            'pijama': 'Sair de pijama 💤',
+            'meia': 'Sapato sem meia 👟',
+            'lanche': 'Comer o prato 🍽️',
+            'pasta': 'Lavar com suco 🥤',
+            'mochila': 'Levar o gato 🐱',
+            'escola': 'Ir para o parque 🎡'
+        };
+        
         dropzones.forEach(zone => {
-            zone.innerHTML = zone.getAttribute('data-expected') === 'olhos' ? 'Dormir mais 😴' :
-                            zone.getAttribute('data-expected') === 'pijama' ? 'Sair de pijama 💤' :
-                            zone.getAttribute('data-expected') === 'meia' ? 'Sapato sem meia 👟' :
-                            zone.getAttribute('data-expected') === 'lanche' ? 'Comer o prato 🍽️' :
-                            zone.getAttribute('data-expected') === 'pasta' ? 'Lavar com suco 🥤' :
-                            zone.getAttribute('data-expected') === 'mochila' ? 'Levar o gato 🐱' :
-                            zone.getAttribute('data-expected') === 'escola' ? 'Ir para o parque 🎡' : zone.innerHTML;
+            const expectedType = zone.getAttribute('data-expected');
+            zone.innerHTML = dropzoneMap[expectedType] || zone.innerHTML;
             zone.className = 's-block error';
+            zone.ondrop = function(e) { drop(e); };
+            zone.ondragover = function(e) { allowDrop(e); };
+            zone.setAttribute('data-expected', expectedType);
         });
     }
 

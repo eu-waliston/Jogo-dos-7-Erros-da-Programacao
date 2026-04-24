@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Jogo dos 7 Erros da Programação - Tela de Parabéns</title>
+    <title>Jogo dos 7 Erros da Programação</title>
     <link rel="stylesheet" href="style/styles.css">
 </head>
 
-        '    <body>
+<body>
                 <div class="game-container">
                     <div class="game-panel">
                         
@@ -26,33 +26,33 @@
                             </div>
                         </div>
 
-                    <div id="area-scratch" class="scratch-container hidden">
-                <div class="inventory">
-                    <h3>🎒 Peças Certas</h3>
-                    <div class="s-block motion" draggable="true" ondragstart="drag(event)" id="correto1" data-id="olhos">👀 Abrir Olhos</div>
-                    <div class="s-block clothes" draggable="true" ondragstart="drag(event)" id="correto2" data-id="pijama">👕 Tirar Pijama</div>
-                    <div class="s-block motion" draggable="true" ondragstart="drag(event)" id="correto3" data-id="meia">🧦 Meia Primeiro</div>
-                    <div class="s-block food" draggable="true" ondragstart="drag(event)" id="correto4" data-id="lanche">🥪 Comer Lanche</div>
-                    <div class="s-block hygiene" draggable="true" ondragstart="drag(event)" id="correto5" data-id="pasta">🪥 Usar Pasta</div>
-                    <div class="s-block items" draggable="true" ondragstart="drag(event)" id="correto6" data-id="mochila">🎒 Minha Mochila</div>
-                    <div class="s-block calendar" draggable="true" ondragstart="drag(event)" id="correto7" data-id="escola">🏫 Ir à Escola</div>
-                </div>
+                        <div id="area-scratch" class="scratch-container hidden">
+                            <div class="inventory">
+                                <h3>🎒 Peças de Reposição</h3>
+                                <div class="s-block motion" draggable="true" ondragstart="drag(event)" id="correto1" data-id="olhos">👀 Abrir Olhos</div>
+                                <div class="s-block clothes" draggable="true" ondragstart="drag(event)" id="correto2" data-id="pijama">👕 Tirar Pijama</div>
+                                <div class="s-block clothes" draggable="true" ondragstart="drag(event)" id="correto3" data-id="uniforme">👔 Vestir Uniforme</div>
+                                <div class="s-block food" draggable="true" ondragstart="drag(event)" id="correto4" data-id="cafe">☕ Tomar Café</div>
+                                <div class="s-block hygiene" draggable="true" ondragstart="drag(event)" id="correto5" data-id="dentes">🪥 Escovar Dentes</div>
+                                <div class="s-block items" draggable="true" ondragstart="drag(event)" id="correto6" data-id="mochila">🎒 Pegar Mochila</div>
+                                <div class="s-block calendar" draggable="true" ondragstart="drag(event)" id="correto7" data-id="escola">🏫 Ir à Escola</div>
+                            </div>
 
-                <div class="robot-script">
-                    <h3>🤖 Rotina do Devzinho</h3>
-                    <div class="s-block start">Ao acordar...</div>
-                    
-                    <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="olhos">Dormir mais 😴</div>
-                    <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="pijama">Sair de pijama 💤</div>
-                    <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="meia">Sapato sem meia 👟</div>
-                    <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="lanche">Comer o prato 🍽️</div>
-                    <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="pasta">Lavar com suco 🥤</div>
-                    <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="mochila">Levar o gato 🐱</div>
-                    <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="escola">Ir para o parque 🎡</div>
-                    
-                    <div class="s-block end">Fim da rotina</div>
-                </div>
-            </div>
+                            <div class="robot-script">
+                                <h3>🤖 Script: Rotina do Devzinho</h3>
+                                <div class="s-block start">Início do Programa</div>
+                                
+                                <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="olhos">Ficar dormindo 😴</div>
+                                <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="pijama">Ir para a rua de pijama 💤</div>
+                                <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="uniforme">Sair de toalha 🛀</div>
+                                <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="cafe">Comer o guardanapo 🍽️</div>
+                                <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="dentes">Escovar com suco 🥤</div>
+                                <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="mochila">Levar o gato na bolsa 🐱</div>
+                                <div class="dropzone error" ondrop="drop(event)" ondragover="allowDrop(event)" data-expected="escola">Ir para o parque 🎡</div>
+                                
+                                <div class="s-block end">Fim do Programa</div>
+                            </div>
+                        </div>
 
             <div class="canvas-area hidden" id="areaCanvas">
                 <div class="code-card">
